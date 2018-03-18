@@ -1,6 +1,6 @@
-package engine.state.event;
+package engine.event;
 
-import engine.state.State;
+import engine.State;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 import engine.utils.OverlayedArrayList;

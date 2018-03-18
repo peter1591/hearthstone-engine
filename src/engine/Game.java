@@ -1,6 +1,5 @@
 package engine;
 
-import engine.state.State;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 

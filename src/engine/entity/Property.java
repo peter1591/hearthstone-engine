@@ -1,4 +1,4 @@
-package engine.state.entity;
+package engine.entity;
 
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;

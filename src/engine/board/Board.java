@@ -1,4 +1,4 @@
-package engine.state.board;
+package engine.board;
 
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;

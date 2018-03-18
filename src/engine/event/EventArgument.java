@@ -1,6 +1,6 @@
-package engine.state.event;
+package engine.event;
 
-import engine.state.entity.EntityManager;
+import engine.entity.EntityManager;
 
 public class EventArgument {
 	public int source = EntityManager.UNKNOWN_ENTITY_ID;

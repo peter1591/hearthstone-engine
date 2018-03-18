@@ -1,6 +1,6 @@
-package engine.state.entity;
+package engine.entity;
 
-import engine.state.event.EventManager;
+import engine.event.EventManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 import engine.utils.LayeredContainers;

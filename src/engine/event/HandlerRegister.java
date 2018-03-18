@@ -1,4 +1,4 @@
-package engine.state.event;
+package engine.event;
 
 import engine.utils.Registry;
 

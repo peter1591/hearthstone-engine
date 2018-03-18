@@ -1,4 +1,4 @@
-package engine.state.entity;
+package engine.entity;
 
 public enum ModifierLayer {
 	ENCHANTMENT_LAYER1,

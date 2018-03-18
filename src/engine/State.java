@@ -1,7 +1,7 @@
-package engine.state;
+package engine;
 
-import engine.state.board.Board;
-import engine.state.entity.EntityManager;
+import engine.board.Board;
+import engine.entity.EntityManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 

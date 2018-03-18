@@ -1,4 +1,4 @@
-package engine.state.event;
+package engine.event;
 
 public enum Event {
 	BEFORE_PLAY_CARD,

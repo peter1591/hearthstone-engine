@@ -1,6 +1,6 @@
-package engine.state.event;
+package engine.event;
 
-import engine.state.State;
+import engine.State;
 import engine.utils.DeepCopyable;
 
 public final class Handler implements DeepCopyable<Handler> {
