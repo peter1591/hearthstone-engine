@@ -4,7 +4,14 @@ import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
 /**
- * The game engine controls the whole game flow.
+ * The game engine controls the whole game flow. This object allows only the available actions
+ * which can be performed by the current player.
+ * 
+ * This class is deep copyable.
+ * 
+ * This class is capable to copy as base. That is, create a new copy which acts as it is deep-copied, but
+ * actually referring to the original object as the base. This is a special case for copy-on-write, and is
+ * useful for a DFS/BFS to iterate over all possible actions.
  * 
  * @author petershih
  *

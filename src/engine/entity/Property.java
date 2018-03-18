@@ -8,7 +8,7 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 		super();
 	}
 
-	public void setAs(Property rhs) {
+	public void setAs(ReadableProperty rhs) {
 	}
 
 	static public Property create() {

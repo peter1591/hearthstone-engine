@@ -4,7 +4,7 @@ import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;
 
 /**
- * Saves the mapping to the entity index.
+ * Saves the mapping to the entity id.
  * 
  * @author petershih
  *
