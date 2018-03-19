@@ -1,8 +1,10 @@
 package engine.event;
 
-import engine.entity.EntityManager;
+import engine.entity.Entity;
 
 public class EventArgument {
-	public int source = EntityManager.UNKNOWN_ENTITY_ID;
-	public int target = EntityManager.UNKNOWN_ENTITY_ID;
+	/**
+	 * The entity who owns this event handler.
+	 */
+	Entity owner;
 }

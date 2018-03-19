@@ -46,6 +46,10 @@ public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 		return ret;
 	}
 	
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+	
 	public Property getInitialProperty() {
 		return initialProperty;
 	}
