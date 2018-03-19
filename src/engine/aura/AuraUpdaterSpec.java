@@ -1,0 +1,36 @@
+package engine.aura;
+
+import java.util.Set;
+
+import engine.State;
+import engine.event.Event;
+import engine.event.EventHandler;
+import engine.utils.DeepCopyable;
+
+/**
+ * This class defines the behavior of an aura. Several mixins are provided to
+ * make it easier to implement.
+ * 
+ * For example:
+ * public class Aura implements 
+ *		EmitByMinionInPlayZone,
+ *		AffectOtherFriendlyMinions,
+ *		EffectModifiesProperty
+ *
+ * @author petershih
+ *
+ */
+public interface AuraUpdaterSpec extends DeepCopyable<AuraUpdaterSpec> {
+	boolean isAuraValid(int auraEmitter, State state);
+
+	Set<Integer> getTargets(int auraEmitter, State state);
+
+	Event getEffectEvent();
+
+	EventHandler createEffectHandler();
+
+	@Override
+	default AuraUpdaterSpec deepCopy() {
+		return this; // this should be a stateless object, so it's safe to share instance
+	}
+}

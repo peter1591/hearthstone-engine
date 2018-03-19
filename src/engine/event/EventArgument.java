@@ -6,5 +6,5 @@ public class EventArgument {
 	/**
 	 * The entity who owns this event handler.
 	 */
-	Entity owner;
+	public Entity owner;
 }
