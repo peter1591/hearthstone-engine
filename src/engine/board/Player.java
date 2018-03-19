@@ -34,4 +34,32 @@ public class Player implements DeepCopyable<Player> {
 		ret.hero_power = hero_power;
 		return ret;
 	}
+	
+	public int getPlayerEntityId() {
+		return entityId;
+	}
+	
+	public int getHeroEntityId() {
+		return hero;
+	}
+	
+	public int getMinionsCount() {
+		return minions.size();
+	}
+	
+	public int getMinionEntityId(int index) {
+		return minions.get(index);
+	}
+	
+	public int getHandCount() {
+		return hand.size();
+	}
+	
+	public int getHandEntityId(int index) {
+		return hand.get(index);
+	}
+	
+	public int getHeroPowerEntityId() {
+		return hero_power;
+	}
 }

@@ -1,5 +1,6 @@
 package engine.entity;
 
+import engine.board.Board.PlayerId;
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;
 
@@ -20,5 +21,17 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 	public Property deepCopy() {
 		Property ret = new Property();
 		return ret;
+	}
+	
+	public void setSide(PlayerId side) {
+		this.side = side;
+	}
+	
+	public void setZone(Zone zone) {
+		this.zone = zone;
+	}
+	
+	public void setSilenced(boolean silenced) {
+		this.silenced = silenced;
 	}
 }

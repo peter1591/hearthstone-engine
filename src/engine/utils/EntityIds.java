@@ -23,6 +23,14 @@ public class EntityIds implements DeepCopyable<EntityIds> {
 		}
 		return ret;
 	}
+	
+	public int size() {
+		return size;
+	}
+	
+	public int get(int index) {
+		return ids[index];
+	}
 
 	public void insert(int idx, int entityId) {
 		assert size < max_capacity;

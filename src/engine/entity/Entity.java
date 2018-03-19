@@ -7,6 +7,7 @@ import engine.utils.LayeredContainers;
 
 public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 	Property initialProperty;
+	
 	LayeredContainers<ModifierLayer, Modifiers> modifiers;
 	Property finalProperty;
 	
@@ -55,6 +56,10 @@ public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 	}
 	
 	public ReadableProperty getFinalProperty() {
+		return finalProperty;
+	}
+	
+	public Property getMutableProperty() {
 		return finalProperty;
 	}
 	
