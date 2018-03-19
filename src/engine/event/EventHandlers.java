@@ -6,7 +6,7 @@ import engine.utils.DeepCopyable;
 import engine.utils.OverlayedArrayList;
 
 class EventHandlers implements DeepCopyable<EventHandlers>, CopyableAsBase<EventHandlers> {
-	public static final EventHandler removedHandler = EventHandler.createAndRegister("@RemovedHandler", null);
+	public static final EventHandler removedHandler = EventHandler.create(null);
 
 	OverlayedArrayList<EventHandler> overlayed_list;
 

@@ -19,12 +19,9 @@ public final class EventHandler implements DeepCopyable<EventHandler> {
 	private EventHandler() {
 	}
 	
-	static public EventHandler createAndRegister(String name, Operation operation) {
+	static public EventHandler create(Operation operation) {
 		EventHandler ret = new EventHandler();
 		ret.operation = operation;
-		
-		HandlerRegister.getInstance().register(name, ret);
-		
 		return ret;
 	}
 	
