@@ -2,7 +2,7 @@ package engine.event;
 
 import engine.State;
 
-public class LambdaEventHandler implements EventHandler {
+public final class LambdaEventHandler implements EventHandler {
 	/**
 	 * Should be stateless.
 	 * 
@@ -14,6 +14,18 @@ public class LambdaEventHandler implements EventHandler {
 	}
 	
 	protected Operation operation;
+	
+	protected boolean owned = false;
+	
+	@Override
+	public boolean isOwned() {
+		return owned;
+	}
+	
+	@Override
+	public void setOwned(boolean owned) {
+		this.owned = owned;
+	}
 	
 	protected LambdaEventHandler() {
 	}

@@ -28,6 +28,7 @@ import engine.event.EventHandler;
  *
  */
 public final class AuraUpdaterHandler implements EventHandler {
+	boolean owned = false;
 	int auraEmitter;
 	HashMap<Integer, Integer> appliedEffects;
 	AuraUpdaterSpec spec;
@@ -40,8 +41,9 @@ public final class AuraUpdaterHandler implements EventHandler {
 		if (appliedEffects.containsKey(targetEntity))
 			return;
 
-		int idx = state.getEntityManager().get(targetEntity).getEventManager().add(spec.getEffectEvent(),
-				spec.createEffectHandler());
+		EventHandler effect = spec.createEffectHandler();
+		effect.setOwned(true);
+		int idx = state.getEntityManager().get(targetEntity).getEventManager().add(spec.getEffectEvent(), effect);
 
 		appliedEffects.put(targetEntity, idx);
 	}
@@ -55,7 +57,7 @@ public final class AuraUpdaterHandler implements EventHandler {
 
 		appliedEffects.remove(targetEntity);
 	}
-	
+
 	private void removeAllAuraEffects(State state) {
 		for (int existTarget : appliedEffects.keySet()) {
 			removeAuraEffect(state, existTarget);
@@ -76,7 +78,7 @@ public final class AuraUpdaterHandler implements EventHandler {
 			removeAllAuraEffects(state);
 			return false;
 		}
-		
+
 		if (!spec.enabled(auraEmitter, state)) {
 			removeAllAuraEffects(state);
 			return true;
@@ -108,5 +110,15 @@ public final class AuraUpdaterHandler implements EventHandler {
 		}
 		ret.spec = spec.deepCopy();
 		return ret;
+	}
+
+	@Override
+	public boolean isOwned() {
+		return owned;
+	}
+
+	@Override
+	public void setOwned(boolean owned) {
+		this.owned = owned;
 	}
 }
