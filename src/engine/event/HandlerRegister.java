@@ -3,7 +3,7 @@ package engine.event;
 import engine.utils.Registry;
 
 public class HandlerRegister {
-	Registry<Handler> registry;
+	Registry<EventHandler> registry;
 	
 	private HandlerRegister() {
 	}
@@ -16,11 +16,11 @@ public class HandlerRegister {
 		return instance;
 	}
 	
-	public void register(String key, Handler item) {
+	public void register(String key, EventHandler item) {
 		registry.register(key, item);
 	}
 	
-	public Handler get(String key) {
+	public EventHandler get(String key) {
 		return registry.get(key);
 	}
 }

@@ -9,7 +9,7 @@ import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
 public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<EventManager> {
-	EnumMap<Event, Handlers> handlers;
+	EnumMap<Event, EventHandlers> handlers;
 
 	private EventManager() {
 	}
@@ -23,7 +23,7 @@ public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<
 	public EventManager deepCopy() {
 		EventManager ret = new EventManager();
 		ret.handlers = new EnumMap<>(Event.class);
-		for (Entry<Event, Handlers> item : handlers.entrySet()) {
+		for (Entry<Event, EventHandlers> item : handlers.entrySet()) {
 			ret.handlers.put(item.getKey(), item.getValue().deepCopy());
 		}
 		return ret;
@@ -32,13 +32,13 @@ public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<
 	public EventManager copyAsBase() {
 		EventManager ret = new EventManager();
 		ret.handlers = new EnumMap<>(Event.class);
-		for (Map.Entry<Event, Handlers> item : handlers.entrySet()) {
+		for (Map.Entry<Event, EventHandlers> item : handlers.entrySet()) {
 			ret.handlers.put(item.getKey(), item.getValue().copyAsBase());
 		}
 		return ret;
 	}
 
-	public int add(Event event, Handler handler) {
+	public int add(Event event, EventHandler handler) {
 		return handlers.get(event).add(handler);
 	}
 

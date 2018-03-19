@@ -3,7 +3,7 @@ package engine.event;
 import engine.State;
 import engine.utils.DeepCopyable;
 
-public final class Handler implements DeepCopyable<Handler> {
+public final class EventHandler implements DeepCopyable<EventHandler> {
 	/**
 	 * Should be stateless.
 	 * 
@@ -16,11 +16,11 @@ public final class Handler implements DeepCopyable<Handler> {
 	
 	Operation operation;
 	
-	private Handler() {
+	private EventHandler() {
 	}
 	
-	static public Handler createAndRegister(String name, Operation operation) {
-		Handler ret = new Handler();
+	static public EventHandler createAndRegister(String name, Operation operation) {
+		EventHandler ret = new EventHandler();
 		ret.operation = operation;
 		
 		HandlerRegister.getInstance().register(name, ret);
@@ -33,7 +33,7 @@ public final class Handler implements DeepCopyable<Handler> {
 	}
 	
 	@Override
-	public Handler deepCopy() {
+	public EventHandler deepCopy() {
 		return this; // this is a stateless object, so it's ok to share the instance
 	}
 }

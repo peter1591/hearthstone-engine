@@ -5,33 +5,33 @@ import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 import engine.utils.OverlayedArrayList;
 
-class Handlers implements DeepCopyable<Handlers>, CopyableAsBase<Handlers> {
-	public static final Handler removedHandler = Handler.createAndRegister("@RemovedHandler", null);
+class EventHandlers implements DeepCopyable<EventHandlers>, CopyableAsBase<EventHandlers> {
+	public static final EventHandler removedHandler = EventHandler.createAndRegister("@RemovedHandler", null);
 
-	OverlayedArrayList<Handler> overlayed_list;
+	OverlayedArrayList<EventHandler> overlayed_list;
 
-	private Handlers() {
+	private EventHandlers() {
 	}
 
-	public static Handlers create() {
-		Handlers ret = new Handlers();
+	public static EventHandlers create() {
+		EventHandlers ret = new EventHandlers();
 		ret.overlayed_list = OverlayedArrayList.create();
 		return ret;
 	}
 
-	public Handlers deepCopy() {
-		Handlers ret = new Handlers();
+	public EventHandlers deepCopy() {
+		EventHandlers ret = new EventHandlers();
 		ret.overlayed_list = overlayed_list.deepCopy();
 		return ret;
 	}
 
-	public Handlers copyAsBase() {
-		Handlers ret = new Handlers();
+	public EventHandlers copyAsBase() {
+		EventHandlers ret = new EventHandlers();
 		ret.overlayed_list = overlayed_list.copyAsBase();
 		return ret;
 	}
 
-	int add(Handler handler) {
+	int add(EventHandler handler) {
 		return overlayed_list.add(handler);
 	}
 
@@ -40,7 +40,7 @@ class Handlers implements DeepCopyable<Handlers>, CopyableAsBase<Handlers> {
 	}
 
 	void invoke(Event event, State state, EventArgument argument) {
-		for (Handler item : overlayed_list) {
+		for (EventHandler item : overlayed_list) {
 			if (item == removedHandler)
 				continue;
 			item.invoke(event, state, argument);
