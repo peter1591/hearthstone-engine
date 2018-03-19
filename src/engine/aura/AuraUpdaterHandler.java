@@ -53,7 +53,7 @@ public final class AuraUpdaterHandler implements EventHandler {
 			return;
 
 		int index = appliedEffects.get(targetEntity);
-		state.getEntityManager().get(targetEntity).getEventManager().markRemoved(spec.getEffectEvent(), index);
+		state.getEntityManager().get(targetEntity).getEventManager().markRemoved(spec.getEffectEvent(), index, true);
 
 		appliedEffects.remove(targetEntity);
 	}

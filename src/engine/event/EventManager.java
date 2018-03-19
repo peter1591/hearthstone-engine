@@ -41,9 +41,13 @@ public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<
 	public int add(Event event, EventHandler handler) {
 		return handlers.get(event).add(handler);
 	}
+	
+	public boolean markRemoved(Event event, int index) {
+		return markRemoved(event, index, false);
+	}
 
-	public void markRemoved(Event event, int index) {
-		handlers.get(event).markRemoved(index);
+	public boolean markRemoved(Event event, int index, boolean fromOwner) {
+		return handlers.get(event).markRemoved(index, fromOwner);
 	}
 
 	public void invoke(Event event, State state, EventArgument argument) {
