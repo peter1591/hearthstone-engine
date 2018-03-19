@@ -3,34 +3,13 @@ package engine.event;
 import engine.State;
 import engine.utils.DeepCopyable;
 
-public final class EventHandler implements DeepCopyable<EventHandler> {
+public interface EventHandler extends DeepCopyable<EventHandler> {
 	/**
-	 * Should be stateless.
 	 * 
-	 * @author petershih
-	 *
+	 * @param event
+	 * @param state
+	 * @param argument
+	 * @return return true to keep this event handler; false to remove this.
 	 */
-	public interface Operation {
-		void handle(Event event, State state, EventArgument argument);
-	}
-	
-	Operation operation;
-	
-	private EventHandler() {
-	}
-	
-	static public EventHandler create(Operation operation) {
-		EventHandler ret = new EventHandler();
-		ret.operation = operation;
-		return ret;
-	}
-	
-	public void invoke(Event event, State state, EventArgument argument) {
-		operation.handle(event, state, argument);
-	}
-	
-	@Override
-	public EventHandler deepCopy() {
-		return this; // this is a stateless object, so it's ok to share the instance
-	}
+	boolean invoke(Event event, State state, EventArgument argument);
 }

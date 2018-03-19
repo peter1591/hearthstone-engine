@@ -6,7 +6,7 @@ import engine.utils.DeepCopyable;
 import engine.utils.OverlayedArrayList;
 
 class EventHandlers implements DeepCopyable<EventHandlers>, CopyableAsBase<EventHandlers> {
-	public static final EventHandler removedHandler = EventHandler.create(null);
+	public static final EventHandler removedHandler = LambdaEventHandler.create(null);
 
 	OverlayedArrayList<EventHandler> overlayed_list;
 
@@ -35,15 +35,17 @@ class EventHandlers implements DeepCopyable<EventHandlers>, CopyableAsBase<Event
 		return overlayed_list.add(handler);
 	}
 
-	void remove(int index) {
+	void markRemoved(int index) {
 		overlayed_list.set(index, removedHandler);
 	}
 
 	void invoke(Event event, State state, EventArgument argument) {
-		for (EventHandler item : overlayed_list) {
-			if (item == removedHandler)
+		for (int i = 0; i < overlayed_list.size(); ++i) {
+			if (overlayed_list.get(i) == removedHandler)
 				continue;
-			item.invoke(event, state, argument);
+			if (overlayed_list.get(i).invoke(event, state, argument) == false) {
+				markRemoved(i);
+			}
 		}
 	}
 }
