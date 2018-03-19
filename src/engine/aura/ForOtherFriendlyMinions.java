@@ -8,7 +8,7 @@ import engine.board.Player;
 import engine.board.Board.PlayerId;
 import engine.entity.ReadableProperty;
 
-public interface AffectOtherFriendlyMinions extends AuraUpdaterSpec {
+public interface ForOtherFriendlyMinions extends AuraUpdaterSpec {
 	public static Set<Integer> getOtherFriendlyMinionss(int auraEmitter, State state) {
 		ReadableProperty property = state.getEntityManager().get(auraEmitter).getFinalProperty();
 		PlayerId side = property.getSide();

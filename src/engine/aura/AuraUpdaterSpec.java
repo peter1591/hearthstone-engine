@@ -13,15 +13,21 @@ import engine.utils.DeepCopyable;
  * 
  * For example:
  * public class Aura implements 
- *		EmitByMinionInPlayZone,
- *		AffectOtherFriendlyMinions,
- *		EffectModifiesProperty
+ *		WhenMinionInPlayZone,
+ *		ForOtherFriendlyMinions,
+ *		ToModifyProperty
+ * {
+ * }
  *
  * @author petershih
  *
  */
 public interface AuraUpdaterSpec extends DeepCopyable<AuraUpdaterSpec> {
-	boolean isAuraValid(int auraEmitter, State state);
+	boolean exists(int auraEmitter, State state);
+	
+	default boolean enabled(int auraEmitter, State state) {
+		return true;
+	}
 
 	Set<Integer> getTargets(int auraEmitter, State state);
 

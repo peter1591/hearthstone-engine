@@ -34,4 +34,20 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 	public void setSilenced(boolean silenced) {
 		this.silenced = silenced;
 	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public void setMaxHp(int maxHp) {
+		this.maxHp = maxHp;
+	}
+
+	public void setAttack(int attack) {
+		this.attack = attack;
+	}
 }

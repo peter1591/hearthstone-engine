@@ -4,9 +4,9 @@ import java.util.Set;
 
 import engine.State;
 
-public interface AffectFriendlyMinions extends AuraUpdaterSpec {
+public interface ForFriendlyMinions extends AuraUpdaterSpec {
 	default Set<Integer> getTargets(int auraEmitter, State state) {
-		Set<Integer> affects = AffectOtherFriendlyMinions.getOtherFriendlyMinionss(auraEmitter, state);
+		Set<Integer> affects = ForOtherFriendlyMinions.getOtherFriendlyMinionss(auraEmitter, state);
 		affects.add(auraEmitter);
 		return affects;
 	}

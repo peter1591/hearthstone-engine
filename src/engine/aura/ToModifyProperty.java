@@ -7,7 +7,7 @@ import engine.event.EventArgument;
 import engine.event.EventHandler;
 import engine.event.LambdaEventHandler;
 
-public interface EffectModifiesProperty extends AuraUpdaterSpec {
+public interface ToModifyProperty extends AuraUpdaterSpec {
 	Modifier getPropertyModifier();
 
 	default Event getEffectEvent() {

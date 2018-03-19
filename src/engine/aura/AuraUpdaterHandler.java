@@ -10,9 +10,12 @@ import engine.event.EventArgument;
 import engine.event.EventHandler;
 
 /**
- * An aura works as follows. 1. In ZoneChanged event, register the aura updater
- * to AuraUpdate event. 2. In AuraUpdate event, apply aura effects to each
- * affected entities, and remove to unaffected ones.
+ * An aura works as follows.
+ * 
+ * 1. In ZoneChanged event, register the aura updater to AuraUpdate event.
+ * 
+ * 2. In AuraUpdate event, apply aura effects to each affected entities, and
+ * remove to unaffected ones.
  * 
  * This class is the helper to implement such an aura updater. Simply implement
  * the Spec class, and you're all set.
@@ -52,6 +55,12 @@ public final class AuraUpdaterHandler implements EventHandler {
 
 		appliedEffects.remove(targetEntity);
 	}
+	
+	private void removeAllAuraEffects(State state) {
+		for (int existTarget : appliedEffects.keySet()) {
+			removeAuraEffect(state, existTarget);
+		}
+	}
 
 	static public AuraUpdaterHandler create(int auraEmitter, AuraUpdaterSpec spec) {
 		AuraUpdaterHandler ret = new AuraUpdaterHandler();
@@ -63,11 +72,14 @@ public final class AuraUpdaterHandler implements EventHandler {
 
 	@Override
 	public boolean invoke(Event event, State state, EventArgument argument) {
-		if (!spec.isAuraValid(auraEmitter, state)) {
-			for (int existTarget : appliedEffects.keySet()) {
-				removeAuraEffect(state, existTarget);
-			}
+		if (!spec.exists(auraEmitter, state)) {
+			removeAllAuraEffects(state);
 			return false;
+		}
+		
+		if (!spec.enabled(auraEmitter, state)) {
+			removeAllAuraEffects(state);
+			return true;
 		}
 
 		Set<Integer> newTargets = spec.getTargets(auraEmitter, state);
