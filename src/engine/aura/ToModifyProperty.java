@@ -10,7 +10,7 @@ public interface ToModifyProperty extends AuraSpec {
 	Modifier getPropertyModifier();
 
 	default Event getEffectEvent() {
-		return Event.AURA_PROPERTY_MODIFIERS;
+		return Event.PROPERTY_MODIFIERS;
 	}
 
 	default LambdaEventHandler createEffectHandler() {
