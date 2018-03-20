@@ -12,11 +12,9 @@ public final class Modifier implements DeepCopyable<Modifier> {
 	private Modifier() {
 	}
 	
-	public static Modifier createAndRegister(String name, Operation operation) {
+	public static Modifier create(Operation operation) {
 		Modifier ret = new Modifier();
 		ret.operation = operation;
-		
-		ModifierRegister.getInstance().register(name, ret);
 		return ret;
 	}
 	

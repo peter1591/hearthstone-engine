@@ -9,7 +9,7 @@ import engine.utils.OverlayedArrayList;
 public class Modifiers implements Iterable<Modifier>, DeepCopyable<Modifiers>, CopyableAsBase<Modifiers> {
 	OverlayedArrayList<Modifier> items;
 	
-	static final Modifier removedModifier = Modifier.createAndRegister("@RemovedModifier", null);
+	static final Modifier removedModifier = Modifier.create(null);
 	
 	private Modifiers() {
 	}
