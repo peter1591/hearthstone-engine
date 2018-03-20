@@ -12,6 +12,9 @@ public class FlowContext implements DeepCopyable<FlowContext>, CopyAsBaseByDeepC
 	// playing card
 	// target
 	
+	public static final int MAX_EVENT_INVOKE_DEPTH = 100;
+	public int eventInvokeDepth = 0;
+	
 	private FlowContext() {
 		
 	}

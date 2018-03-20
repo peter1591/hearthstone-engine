@@ -23,6 +23,10 @@ public class ManagedState {
 		this.state = state;
 	}
 	
+	public FlowContext getFlowContext() {
+		return state.getFlowContext();
+	}
+	
 	public int getBoardEntityId() {
 		return state.getBoard().getBoardEntityId();
 	}

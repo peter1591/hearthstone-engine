@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import engine.FlowContext;
 import engine.ManagedState;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
@@ -51,6 +52,12 @@ public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<
 	}
 
 	public void invoke(Event event, ManagedState state, EventArgument argument) {
+		if (state.getFlowContext().eventInvokeDepth > FlowContext.MAX_EVENT_INVOKE_DEPTH) {
+			return;
+		}
+		
+		state.getFlowContext().eventInvokeDepth++;
 		handlers.get(event).invoke(event, state, argument);
+		state.getFlowContext().eventInvokeDepth--;
 	}
 }
