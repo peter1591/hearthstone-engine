@@ -1,17 +1,18 @@
 package engine.board;
 
+import engine.entity.EntityManager;
 import engine.utils.EntityIds;
 
 public class ReadablePlayer {
 	static final int MAX_MINIONS = 7;
 	static final int MAX_HAND_CARDS = 10;
 
-	int entityId;
-	int hero;
+	int entityId = EntityManager.UNKNOWN_ENTITY_ID;
+	int hero = EntityManager.UNKNOWN_ENTITY_ID;
 	EntityIds minions;
 	EntityIds hand;
-	int hero_power;
-	int weapon;
+	int hero_power = EntityManager.UNKNOWN_ENTITY_ID;
+	int weapon = EntityManager.UNKNOWN_ENTITY_ID;
 	
 	public int getPlayerEntityId() {
 		return entityId;
@@ -41,6 +42,9 @@ public class ReadablePlayer {
 		return hero_power;
 	}
 	
+	public boolean hasWeapon() {
+		return weapon != EntityManager.UNKNOWN_ENTITY_ID;
+	}
 	public int getWeaponEntityId() {
 		return weapon;
 	}

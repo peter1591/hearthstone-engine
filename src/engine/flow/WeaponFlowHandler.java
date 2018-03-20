@@ -23,9 +23,11 @@ public class WeaponFlowHandler {
 		@Override
 		public boolean handle(Event event, ManagedState state, EventArgument argument) {
 			PlayerId side = argument.owner.getFinalProperty().getSide();
-			int weaponId = state.getPlayer(side).getWeaponEntityId();
-			int attack = state.getEntityProperty(weaponId).getAttack();
-			argument.owner.getMutableProperty().addAttack(attack);
+			if (state.getPlayer(side).hasWeapon()) {
+				int weaponId = state.getPlayer(side).getWeaponEntityId();
+				int attack = state.getEntityProperty(weaponId).getAttack();
+				argument.owner.getMutableProperty().addAttack(attack);
+			}
 			return true;
 		}
 	});
@@ -34,9 +36,11 @@ public class WeaponFlowHandler {
 		@Override
 		public boolean handle(Event event, ManagedState state, EventArgument argument) {
 			PlayerId side = argument.owner.getFinalProperty().getSide();
-			int weaponId = state.getPlayer(side).getWeaponEntityId();
-			int damage = 1;
-			state.damage(state.getBoardEntityId(), weaponId, damage);
+			if (state.getPlayer(side).hasWeapon()) {
+				int weaponId = state.getPlayer(side).getWeaponEntityId();
+				int damage = 1;
+				state.damage(state.getBoardEntityId(), weaponId, damage);
+			}
 			return true;
 		}
 	});

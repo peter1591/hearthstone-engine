@@ -25,4 +25,12 @@ public class Player extends ReadablePlayer implements DeepCopyable<Player> {
 		ret.hero_power = hero_power;
 		return ret;
 	}
+	
+	public void setWeapon(int entityId) {
+		assert entityId != EntityManager.UNKNOWN_ENTITY_ID;
+		weapon = entityId;
+	}
+	public void unsetWeapon() {
+		weapon = EntityManager.UNKNOWN_ENTITY_ID;
+	}
 }
