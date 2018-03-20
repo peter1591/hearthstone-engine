@@ -50,4 +50,7 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 	public void setAttack(int attack) {
 		this.attack = attack;
 	}
+	public void addAttack(int val) {
+		this.attack += val;
+	}
 }
