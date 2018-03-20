@@ -12,6 +12,14 @@ public final class Modifier implements DeepCopyable<Modifier> {
 	private Modifier() {
 	}
 	
+	/**
+	 * Create a property modifier. This can be easily created using lambda expression:
+	 * 
+	 * Modifier aModifier = Modifier.create((property) -> property.addAttack(3));
+	 * 
+	 * @param operation
+	 * @return
+	 */
 	public static Modifier create(Operation operation) {
 		Modifier ret = new Modifier();
 		ret.operation = operation;
