@@ -12,13 +12,14 @@ import engine.event.EventHandler;
 /**
  * An aura works as follows.
  * 
- * 1. In ZoneChanged event, register the aura updater to AuraUpdate event.
+ * 1. In ZoneChanged event, register the aura updater to the event this aura
+ * is listening to.
  * 
- * 2. In AuraUpdate event, apply aura effects to each affected entities, and
+ * 2. In the listening event, apply aura effects to each affected entities, and
  * remove to unaffected ones.
  * 
- * This class is the helper to implement such an aura updater. Simply implement
- * the Spec class, and you're all set.
+ * This class is the helper to implement such an aura event listen. Simply implement
+ * the AuraSpec class, and you're all set.
  * 
  * Limited that only one effect can be applied on each entity. If you really
  * need to apply multiple effects on one single entity, one way is to use
@@ -27,13 +28,13 @@ import engine.event.EventHandler;
  * @author petershih
  *
  */
-public final class AuraUpdaterHandler implements EventHandler {
+public final class AuraHandler implements EventHandler {
 	boolean owned = false;
 	int auraEmitter;
 	HashMap<Integer, Integer> appliedEffects;
-	AuraUpdaterSpec spec;
+	AuraSpec spec;
 
-	private AuraUpdaterHandler() {
+	private AuraHandler() {
 
 	}
 
@@ -64,8 +65,8 @@ public final class AuraUpdaterHandler implements EventHandler {
 		}
 	}
 
-	static public AuraUpdaterHandler create(int auraEmitter, AuraUpdaterSpec spec) {
-		AuraUpdaterHandler ret = new AuraUpdaterHandler();
+	static public AuraHandler create(int auraEmitter, AuraSpec spec) {
+		AuraHandler ret = new AuraHandler();
 		ret.auraEmitter = auraEmitter;
 		ret.appliedEffects = new HashMap<>();
 		ret.spec = spec;
@@ -101,8 +102,8 @@ public final class AuraUpdaterHandler implements EventHandler {
 	}
 
 	@Override
-	public AuraUpdaterHandler deepCopy() {
-		AuraUpdaterHandler ret = new AuraUpdaterHandler();
+	public AuraHandler deepCopy() {
+		AuraHandler ret = new AuraHandler();
 		ret.auraEmitter = auraEmitter;
 		ret.appliedEffects = new HashMap<>();
 		for (Entry<Integer, Integer> item : appliedEffects.entrySet()) {

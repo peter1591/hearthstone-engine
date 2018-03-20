@@ -22,7 +22,7 @@ import engine.utils.DeepCopyable;
  * @author petershih
  *
  */
-public interface AuraUpdaterSpec extends DeepCopyable<AuraUpdaterSpec> {
+public interface AuraSpec extends DeepCopyable<AuraSpec> {
 	boolean exists(int auraEmitter, State state);
 	
 	default boolean enabled(int auraEmitter, State state) {
@@ -36,7 +36,7 @@ public interface AuraUpdaterSpec extends DeepCopyable<AuraUpdaterSpec> {
 	EventHandler createEffectHandler();
 
 	@Override
-	default AuraUpdaterSpec deepCopy() {
+	default AuraSpec deepCopy() {
 		return this; // this should be a stateless object, so it's safe to share instance
 	}
 }
