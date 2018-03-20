@@ -10,7 +10,7 @@ import engine.utils.DeepCopyable;
  *
  */
 public class Board implements DeepCopyable<Board>, CopyAsBaseByDeepCopy<Board> {
-	int board;
+	int board; // boardEntityId
 	Player[] players;
 
 	public enum PlayerId {
@@ -30,8 +30,9 @@ public class Board implements DeepCopyable<Board>, CopyAsBaseByDeepCopy<Board> {
 	private Board() {
 	}
 
-	static public Board create() {
+	static public Board create(int boardEntityid) {
 		Board ret = new Board();
+		ret.board = boardEntityid;
 		ret.players = new Player[2];
 		for (int i = 0; i < 2; ++i) {
 			ret.players[i] = Player.create();
@@ -42,6 +43,7 @@ public class Board implements DeepCopyable<Board>, CopyAsBaseByDeepCopy<Board> {
 	@Override
 	public Board deepCopy() {
 		Board ret = new Board();
+		ret.board = board;
 		ret.players = new Player[2];
 		for (int i = 0; i < 2; ++i) {
 			ret.players[i] = players[i].deepCopy();
@@ -59,5 +61,9 @@ public class Board implements DeepCopyable<Board>, CopyAsBaseByDeepCopy<Board> {
 
 	public Player get(PlayerId playerId) {
 		return players[playerId.getIndex()];
+	}
+	
+	public int getBoardEntityId() {
+		return board;
 	}
 }

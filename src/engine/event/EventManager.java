@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import engine.State;
+import engine.ManagedState;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
@@ -50,7 +50,7 @@ public class EventManager implements DeepCopyable<EventManager>, CopyableAsBase<
 		return handlers.get(event).markRemoved(index, fromOwner);
 	}
 
-	public void invoke(Event event, State state, EventArgument argument) {
+	public void invoke(Event event, ManagedState state, EventArgument argument) {
 		handlers.get(event).invoke(event, state, argument);
 	}
 }

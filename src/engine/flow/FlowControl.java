@@ -1,9 +1,9 @@
 package engine.flow;
 
-import engine.State;
+import engine.ManagedState;
 
 public class FlowControl {
-	public static void Initialize(State state) {
+	public static void Initialize(ManagedState state) {
 		WeaponFlowHandler.Process(state);
 	}
 }

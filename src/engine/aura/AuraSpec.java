@@ -2,7 +2,7 @@ package engine.aura;
 
 import java.util.Set;
 
-import engine.State;
+import engine.ManagedState;
 import engine.event.Event;
 import engine.event.EventHandler;
 import engine.utils.DeepCopyable;
@@ -23,13 +23,13 @@ import engine.utils.DeepCopyable;
  *
  */
 public interface AuraSpec extends DeepCopyable<AuraSpec> {
-	boolean exists(int auraEmitter, State state);
+	boolean exists(int auraEmitter, ManagedState state);
 	
-	default boolean enabled(int auraEmitter, State state) {
+	default boolean enabled(int auraEmitter, ManagedState state) {
 		return true;
 	}
 
-	Set<Integer> getTargets(int auraEmitter, State state);
+	Set<Integer> getTargets(int auraEmitter, ManagedState state);
 
 	Event getEffectEvent();
 

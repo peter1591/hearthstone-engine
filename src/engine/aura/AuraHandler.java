@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import engine.ManagedState;
 import engine.State;
 import engine.event.Event;
 import engine.event.EventArgument;
@@ -38,28 +39,28 @@ public final class AuraHandler implements EventHandler {
 
 	}
 
-	private void addAuraEffect(State state, int targetEntity) {
+	private void addAuraEffect(ManagedState state, int targetEntity) {
 		if (appliedEffects.containsKey(targetEntity))
 			return;
 
 		EventHandler effect = spec.createEffectHandler();
 		effect.setOwned(true);
-		int idx = state.getEntityManager().get(targetEntity).getEventManager().add(spec.getEffectEvent(), effect);
+		int idx = state.addEvent(targetEntity, spec.getEffectEvent(), effect);
 
 		appliedEffects.put(targetEntity, idx);
 	}
 
-	private void removeAuraEffect(State state, int targetEntity) {
+	private void removeAuraEffect(ManagedState state, int targetEntity) {
 		if (!appliedEffects.containsKey(targetEntity))
 			return;
 
 		int index = appliedEffects.get(targetEntity);
-		state.getEntityManager().get(targetEntity).getEventManager().markRemoved(spec.getEffectEvent(), index, true);
+		state.removeEvent(targetEntity, spec.getEffectEvent(), index, true);
 
 		appliedEffects.remove(targetEntity);
 	}
 
-	private void removeAllAuraEffects(State state) {
+	private void removeAllAuraEffects(ManagedState state) {
 		for (int existTarget : appliedEffects.keySet()) {
 			removeAuraEffect(state, existTarget);
 		}
@@ -74,7 +75,7 @@ public final class AuraHandler implements EventHandler {
 	}
 
 	@Override
-	public boolean invoke(Event event, State state, EventArgument argument) {
+	public boolean invoke(Event event, ManagedState state, EventArgument argument) {
 		if (!spec.exists(auraEmitter, state)) {
 			removeAllAuraEffects(state);
 			return false;

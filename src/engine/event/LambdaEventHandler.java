@@ -1,6 +1,6 @@
 package engine.event;
 
-import engine.State;
+import engine.ManagedState;
 
 public final class LambdaEventHandler implements EventHandler {
 	/**
@@ -10,7 +10,7 @@ public final class LambdaEventHandler implements EventHandler {
 	 *
 	 */
 	public interface Operation {
-		boolean handle(Event event, State state, EventArgument argument);
+		boolean handle(Event event, ManagedState state, EventArgument argument);
 	}
 	
 	protected Operation operation;
@@ -37,7 +37,7 @@ public final class LambdaEventHandler implements EventHandler {
 	}
 
 	@Override
-	public boolean invoke(Event event, State state, EventArgument argument) {
+	public boolean invoke(Event event, ManagedState state, EventArgument argument) {
 		return operation.handle(event, state, argument);
 	}
 	

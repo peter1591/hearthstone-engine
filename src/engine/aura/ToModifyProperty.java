@@ -1,6 +1,6 @@
 package engine.aura;
 
-import engine.State;
+import engine.ManagedState;
 import engine.entity.Modifier;
 import engine.event.Event;
 import engine.event.EventArgument;
@@ -14,7 +14,7 @@ public interface ToModifyProperty extends AuraSpec {
 	}
 
 	default LambdaEventHandler createEffectHandler() {
-		return LambdaEventHandler.create((Event event, State state, EventArgument argument) -> {
+		return LambdaEventHandler.create((Event event, ManagedState state, EventArgument argument) -> {
 			getPropertyModifier().apply(argument.owner.getMutableProperty());
 			return false;
 		});

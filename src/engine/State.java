@@ -1,6 +1,7 @@
 package engine;
 
 import engine.board.Board;
+import engine.entity.Entity;
 import engine.entity.EntityManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
@@ -16,7 +17,10 @@ public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 	static public State create() {
 		State ret = new State();
 		ret.entityManager = EntityManager.create();
-		ret.board = Board.create();
+		
+		int boardEntityId = ret.entityManager.add(Entity.create());
+		ret.board = Board.create(boardEntityId);
+		
 		ret.flowContext = FlowContext.create();
 		return ret;
 	}

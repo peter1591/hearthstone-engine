@@ -31,7 +31,7 @@ public class Game implements DeepCopyable<Game>, CopyableAsBase<Game> {
 	public static Game createWithInitializedState(State state) {
 		Game ret = new Game();
 		ret.state = state;
-		FlowControl.Initialize(state);
+		FlowControl.Initialize(new ManagedState(state));
 		return ret;
 	}
 

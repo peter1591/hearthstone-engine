@@ -1,6 +1,6 @@
 package engine.event;
 
-import engine.State;
+import engine.ManagedState;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 import engine.utils.OverlayedArrayList;
@@ -51,7 +51,7 @@ class EventHandlers implements DeepCopyable<EventHandlers>, CopyableAsBase<Event
 		return true;
 	}
 
-	void invoke(Event event, State state, EventArgument argument) {
+	void invoke(Event event, ManagedState state, EventArgument argument) {
 		for (int i = 0; i < overlayed_list.size(); ++i) {
 			if (overlayed_list.get(i) == removedHandler)
 				continue;
