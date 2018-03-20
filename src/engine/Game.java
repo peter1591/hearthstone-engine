@@ -1,5 +1,6 @@
 package engine;
 
+import engine.flow.FlowControl;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
@@ -30,6 +31,7 @@ public class Game implements DeepCopyable<Game>, CopyableAsBase<Game> {
 	public static Game createWithInitializedState(State state) {
 		Game ret = new Game();
 		ret.state = state;
+		FlowControl.Initialize(state);
 		return ret;
 	}
 
