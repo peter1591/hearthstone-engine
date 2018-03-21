@@ -64,35 +64,37 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 	
 	private EventArgument invokeBeforeZoneChangeEvents(int entityId, PlayerId toSide, Zone toZone) {
 		Entity entity = state.getEntityManager().get(entityId);
+		Entity boardEntity = state.getEntityManager().get(getBoardEntityId());
 		EventArgument argument = new EventArgument(entity, getBoardEntityId());
 		argument.side = toSide;
 		argument.zone = toZone;
 		entity.getEventManager().invoke(Event.BEFORE_ZONE_CHANGE, this, argument);
+		boardEntity.getEventManager().invoke(Event.BEFORE_ZONE_CHANGE, this, argument);
 		return argument;
 	}
 	
 	private void invokeRemovedFromZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
 		Entity entity = state.getEntityManager().get(entityId);
+		Entity boardEntity = state.getEntityManager().get(getBoardEntityId());
 		EventArgument argument = new EventArgument(entity, getBoardEntityId());
 		argument.side = fromSide;
 		argument.zone = fromZone;
 		entity.getEventManager().invoke(Event.REMOVED_FROM_ZONE, this, argument);
+		boardEntity.getEventManager().invoke(Event.REMOVED_FROM_ZONE, this, argument);
 	}
 	
 	private void invokeAddedToZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
 		Entity entity = state.getEntityManager().get(entityId);
+		Entity boardEntity = state.getEntityManager().get(getBoardEntityId());
 		EventArgument argument = new EventArgument(entity, getBoardEntityId());
 		argument.side = fromSide;
 		argument.zone = fromZone;
 		entity.getEventManager().invoke(Event.ADDED_TO_ZONE, this, argument);
+		boardEntity.getEventManager().invoke(Event.ADDED_TO_ZONE, this, argument);
 	}
 	
 	public void changeZone(int entityId, PlayerId side, Zone zone) {
-		// Need to trigger events on the moving entity, and also the board entity
-		
 		EventArgument argument = invokeBeforeZoneChangeEvents(getBoardEntityId(), side, zone);
-		if (argument.abort) return;
-		argument = invokeBeforeZoneChangeEvents(entityId, argument.side, argument.zone);
 		if (argument.abort) return;
 		
 		side = argument.side;
@@ -104,14 +106,7 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		Zone fromZone = entity.getFinalProperty().getZone();
 		entity.getMutableProperty().setZone(zone);
 		
-		// trigger event listeners on the board entity
-		invokeRemovedFromZoneEvents(getBoardEntityId(), fromSide, fromZone);
-		
-		// trigger event listeners on the moving entity itself
 		invokeRemovedFromZoneEvents(entityId, fromSide, fromZone);
-		
-		// similar as above
-		invokeAddedToZoneEvents(getBoardEntityId(), fromSide, fromZone);
 		invokeAddedToZoneEvents(entityId, fromSide, fromZone);
 	}
 	
