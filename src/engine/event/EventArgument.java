@@ -1,6 +1,8 @@
 package engine.event;
 
+import engine.board.Board.PlayerId;
 import engine.entity.Entity;
+import engine.entity.ReadableProperty.Zone;
 
 public class EventArgument {
 	/**
@@ -14,9 +16,19 @@ public class EventArgument {
 	final public int triggerer;
 	
 	public int amount;
+
+	// for zone change event
+	public PlayerId side;
+	public Zone zone;
+	
+	/**
+	 * should we abort the operation
+	 */
+	public boolean abort;
 	
 	public EventArgument(Entity owner, int triggerer) {
 		this.owner = owner;
 		this.triggerer = triggerer;
+		this.abort = false;
 	}
 }

@@ -4,9 +4,12 @@ import engine.board.ReadablePlayer;
 import engine.board.Board.PlayerId;
 import engine.entity.Entity;
 import engine.entity.ReadableProperty;
+import engine.entity.ReadableProperty.Zone;
 import engine.event.Event;
 import engine.event.EventArgument;
 import engine.event.EventHandler;
+import engine.utils.CopyableAsBase;
+import engine.utils.DeepCopyable;
 
 /**
  * Provide interface for client card to modify the game state.
@@ -16,11 +19,31 @@ import engine.event.EventHandler;
  * @author petershih
  *
  */
-public class ManagedState {
+public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<ManagedState> {
 	State state;
 	
-	public ManagedState(State state) {
-		this.state = state;
+	private ManagedState() {
+		
+	}
+	
+	public static ManagedState create(State state) {
+		ManagedState ret = new ManagedState();
+		ret.state = state;
+		return ret;
+	}
+
+	@Override
+	public ManagedState copyAsBase() {
+		ManagedState ret = new ManagedState();
+		ret.state = state.copyAsBase();
+		return ret;
+	}
+
+	@Override
+	public ManagedState deepCopy() {
+		ManagedState ret = new ManagedState();
+		ret.state = state.deepCopy();
+		return ret;
 	}
 	
 	public FlowContext getFlowContext() {
@@ -37,6 +60,59 @@ public class ManagedState {
 	
 	public ReadableProperty getEntityProperty(int entityId) {
 		return state.getEntityManager().get(entityId).getFinalProperty();
+	}
+	
+	private EventArgument invokeBeforeZoneChangeEvents(int entityId, PlayerId toSide, Zone toZone) {
+		Entity entity = state.getEntityManager().get(entityId);
+		EventArgument argument = new EventArgument(entity, getBoardEntityId());
+		argument.side = toSide;
+		argument.zone = toZone;
+		entity.getEventManager().invoke(Event.BEFORE_ZONE_CHANGE, this, argument);
+		return argument;
+	}
+	
+	private void invokeRemovedFromZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
+		Entity entity = state.getEntityManager().get(entityId);
+		EventArgument argument = new EventArgument(entity, getBoardEntityId());
+		argument.side = fromSide;
+		argument.zone = fromZone;
+		entity.getEventManager().invoke(Event.REMOVED_FROM_ZONE, this, argument);
+	}
+	
+	private void invokeAddedToZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
+		Entity entity = state.getEntityManager().get(entityId);
+		EventArgument argument = new EventArgument(entity, getBoardEntityId());
+		argument.side = fromSide;
+		argument.zone = fromZone;
+		entity.getEventManager().invoke(Event.ADDED_TO_ZONE, this, argument);
+	}
+	
+	public void changeZone(int entityId, PlayerId side, Zone zone) {
+		// Need to trigger events on the moving entity, and also the board entity
+		
+		EventArgument argument = invokeBeforeZoneChangeEvents(getBoardEntityId(), side, zone);
+		if (argument.abort) return;
+		argument = invokeBeforeZoneChangeEvents(entityId, argument.side, argument.zone);
+		if (argument.abort) return;
+		
+		side = argument.side;
+		zone = argument.zone;
+		
+		Entity entity = state.getEntityManager().get(entityId);
+		PlayerId fromSide = entity.getFinalProperty().getSide();
+		entity.getMutableProperty().setSide(side);
+		Zone fromZone = entity.getFinalProperty().getZone();
+		entity.getMutableProperty().setZone(zone);
+		
+		// trigger event listeners on the board entity
+		invokeRemovedFromZoneEvents(getBoardEntityId(), fromSide, fromZone);
+		
+		// trigger event listeners on the moving entity itself
+		invokeRemovedFromZoneEvents(entityId, fromSide, fromZone);
+		
+		// similar as above
+		invokeAddedToZoneEvents(getBoardEntityId(), fromSide, fromZone);
+		invokeAddedToZoneEvents(entityId, fromSide, fromZone);
 	}
 	
 	public int addEvent(int entityId, Event event, EventHandler handler) {

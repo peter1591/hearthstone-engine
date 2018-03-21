@@ -22,16 +22,16 @@ public class Game implements DeepCopyable<Game>, CopyableAsBase<Game> {
 		FIRST_PLAYER_WIN, SECOND_PLAYER_WIN, DRAW
 	}
 	
-	State state;
+	ManagedState state;
 
 	private Game() {
 
 	}
 
-	public static Game createWithInitializedState(State state) {
+	public static Game create(State state) {
 		Game ret = new Game();
-		ret.state = state;
-		FlowControl.Initialize(new ManagedState(state));
+		ret.state = ManagedState.create(state);
+		FlowControl.Initialize(ret.state);
 		return ret;
 	}
 

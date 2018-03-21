@@ -1,5 +1,7 @@
 package engine.board;
 
+import engine.board.Board.PlayerId;
+import engine.entity.Entity;
 import engine.entity.EntityManager;
 import engine.utils.DeepCopyable;
 import engine.utils.EntityIds;
@@ -24,6 +26,14 @@ public class Player extends ReadablePlayer implements DeepCopyable<Player> {
 		ret.hand = hand.deepCopy();
 		ret.hero_power = hero_power;
 		return ret;
+	}
+	
+	public void callbackAfterRemoved(PlayerId side, Entity entity) {
+		// TODO
+	}
+	
+	public void callbackAfterAdded(PlayerId side, Entity entity) {
+		// TODO
 	}
 	
 	public void setWeapon(int entityId) {
