@@ -8,27 +8,24 @@ public class EventArgument {
 	/**
 	 * The entity who owns this event handler.
 	 */
-	final public Entity owner;
+	public Entity owner;
 	
 	/**
 	 * Who triggers this event.
 	 */
-	final public int triggerer;
+	public int triggerer;
 	
 	public int amount;
 
 	// for zone change event
 	public PlayerId side;
 	public Zone zone;
+	public int zoneIndex;
 	
 	/**
 	 * should we abort the operation
 	 */
-	public boolean abort;
+	public boolean abort = false;
 	
-	public EventArgument(Entity owner, int triggerer) {
-		this.owner = owner;
-		this.triggerer = triggerer;
-		this.abort = false;
-	}
+	public boolean booleanResult;
 }

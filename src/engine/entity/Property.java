@@ -1,6 +1,7 @@
 package engine.entity;
 
 import engine.board.Board.PlayerId;
+import engine.entity.ReadableProperty.CardType;
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;
 
@@ -31,6 +32,10 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 		this.zone = zone;
 	}
 	
+	public void setCardType(CardType cardType) {
+		this.cardType = cardType;
+	}
+	
 	public void setSilenced(boolean silenced) {
 		this.silenced = silenced;
 	}
@@ -52,5 +57,25 @@ public class Property extends ReadableProperty implements DeepCopyable<Property>
 	}
 	public void addAttack(int val) {
 		this.attack += val;
+	}
+
+	public void setResourceMax(int resourceMax) {
+		this.resourceMax = resourceMax;
+	}
+
+	public void setResourceCurrent(int resourceCurrent) {
+		this.resourceCurrent = resourceCurrent;
+	}
+
+	public void setResourceLocked(int resourceLocked) {
+		this.resourceLocked = resourceLocked;
+	}
+
+	public void setResourceLockedNext(int resourceLockedNext) {
+		this.resourceLockedNext = resourceLockedNext;
+	}
+
+	public void setPlayable(boolean playable) {
+		this.playable = playable;
 	}
 }

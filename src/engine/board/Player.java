@@ -43,4 +43,8 @@ public class Player extends ReadablePlayer implements DeepCopyable<Player> {
 	public void unsetWeapon() {
 		weapon = EntityManager.UNKNOWN_ENTITY_ID;
 	}
+	
+	public void addMinion(int entityId, int index) {
+		minions.insert(index, entityId);
+	}
 }

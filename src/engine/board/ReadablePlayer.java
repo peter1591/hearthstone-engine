@@ -25,6 +25,9 @@ public class ReadablePlayer {
 	public int getMinionsCount() {
 		return minions.size();
 	}
+	public boolean isMinionsFull() {
+		return getMinionsCount() >= MAX_MINIONS;
+	}
 	
 	public int getMinionEntityId(int index) {
 		return minions.get(index);

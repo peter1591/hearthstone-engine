@@ -1,5 +1,8 @@
 package engine;
 
+import java.util.ArrayList;
+
+import engine.GameAction.BoardEntityIndex;
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;
 
@@ -15,6 +18,14 @@ public class FlowContext implements DeepCopyable<FlowContext>, CopyAsBaseByDeepC
 	public static final int MAX_EVENT_INVOKE_DEPTH = 100;
 	public int eventInvokeDepth = 0;
 	
+	public GameAction gameAction;
+	public int attacker;
+	public int defender;
+	
+	// for attack, this records the defenders
+	// for spells, this records the targetables
+	public ArrayList<BoardEntityIndex> targets;
+
 	private FlowContext() {
 		
 	}
