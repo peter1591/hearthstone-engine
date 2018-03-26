@@ -3,12 +3,14 @@ package engine;
 import engine.board.Board;
 import engine.entity.Entity;
 import engine.entity.EntityManager;
+import engine.event.FlowEventManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
 public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 	EntityManager entityManager;
 	Board board;
+	FlowEventManager flowEventManager;
 	FlowContext flowContext;
 	
 	private State() {
@@ -21,6 +23,7 @@ public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 		int boardEntityId = ret.entityManager.add(Entity.create());
 		ret.board = Board.create(boardEntityId);
 		
+		ret.flowEventManager = FlowEventManager.create();
 		ret.flowContext = FlowContext.create();
 		return ret;
 	}
@@ -30,6 +33,7 @@ public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 		State ret = new State();
 		ret.entityManager = entityManager.deepCopy();
 		ret.board = board.deepCopy();
+		ret.flowEventManager = flowEventManager.deepCopy();
 		ret.flowContext = flowContext.deepCopy();
 		return ret;
 	}
@@ -39,6 +43,7 @@ public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 		State ret = new State();
 		ret.entityManager = entityManager.copyAsBase();
 		ret.board = board.copyAsBase();
+		ret.flowEventManager = flowEventManager.copyAsBase();
 		ret.flowContext = flowContext.copyAsBase();
 		return ret;
 	}
@@ -49,6 +54,10 @@ public class State implements DeepCopyable<State>, CopyableAsBase<State> {
 	
 	public Board getBoard() {
 		return board;
+	}
+	
+	public FlowEventManager getFlowEventManager() {
+		return flowEventManager;
 	}
 	
 	public FlowContext getFlowContext() {

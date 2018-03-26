@@ -1,13 +1,26 @@
 package engine;
 
 import engine.board.ReadablePlayer;
+
+import java.util.function.Function;
+
 import engine.board.Board.PlayerId;
 import engine.entity.Entity;
 import engine.entity.ReadableProperty;
 import engine.entity.ReadableProperty.Zone;
-import engine.event.Event;
+import engine.event.EntityEventArgument;
+import engine.event.EntityEventManager;
+import engine.event.EventAddedToZone;
+import engine.event.EventAfterTurnStarted;
 import engine.event.EventArgument;
-import engine.event.EventHandler;
+import engine.event.EventBeforeTurnEnd;
+import engine.event.EventBeforeZoneChange;
+import engine.event.EventCheckPlayable;
+import engine.event.EventHandlers;
+import engine.event.EventOnDamaged;
+import engine.event.EventOnPlay;
+import engine.event.EventRemovedFromZone;
+import engine.event.FlowEventManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 
@@ -67,6 +80,10 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		return state.getEntityManager().get(entityId).getFinalProperty();
 	}
 	
+	public EntityEventManager getEntityEventManager(int entityId) {
+		return state.getEntityManager().get(entityId).getEventManager();
+	}
+	
 	private boolean checkCardPlayable(int entityId) {
 		int cost = getEntityProperty(entityId).getCost();
 		int resource = getEntityProperty(getCurrentPlayer().getPlayerEntityId()).getResourceCurrent();
@@ -74,7 +91,7 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		if (resource < cost)
 			return false;
 		
-		return invokeCheckPlayableEvent(entityId).booleanResult;
+		return invokeCheckPlayableEvent(entityId).playable;
 	}
 	
 	private boolean checkAttackable(int entityId) {
@@ -110,63 +127,71 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		checkPlayable();
 	}
 	
-	private EventArgument invokeEvent(Event event, int entityId, int triggerer, EventArgument argument) {
+	private <T extends EntityEventArgument>
+	T invokeEvent(int entityId, T argument, Function<EntityEventManager, EventHandlers<T>> handlersGetter) {
 		Entity entity = state.getEntityManager().get(entityId);
 		argument.owner = entity;
-		argument.triggerer = triggerer;
-		entity.getEventManager().invoke(event, this, argument);
+
+		if (state.getFlowContext().eventInvokeDepth <= FlowContext.MAX_EVENT_INVOKE_DEPTH) {
+			state.getFlowContext().eventInvokeDepth++;
+			handlersGetter.apply(entity.getEventManager()).invoke(this, argument);
+			state.getFlowContext().eventInvokeDepth++;
+		}
+		
+		return argument;
+	}
+	
+	private <T extends EventArgument> T invokeFlowEvent(T argument, Function<FlowEventManager, EventHandlers<T>> handlersGetter) {
+		if (state.getFlowContext().eventInvokeDepth <= FlowContext.MAX_EVENT_INVOKE_DEPTH) {
+			state.getFlowContext().eventInvokeDepth++;
+			handlersGetter.apply(state.getFlowEventManager()).invoke(this, argument);
+			state.getFlowContext().eventInvokeDepth++;
+		}
+		
 		return argument;
 	}
 
-	public EventArgument invokeCheckPlayableEvent(int entityId) {
-		EventArgument argument = new EventArgument();
-		argument.booleanResult = true;
-		invokeEvent(Event.CHECK_PLAYABLE, entityId, getBoardEntityId(), argument);
+	public EventCheckPlayable.Argument invokeCheckPlayableEvent(int entityId) {
+		EventCheckPlayable.Argument argument = new EventCheckPlayable.Argument();
+		invokeEvent(entityId, argument, (mgr) -> mgr.checkPlayable());
 		return argument;
 	}
 	
 	public EventArgument invokeOnPlayEvent(int entityId) {
-		EventArgument argument = new EventArgument();
-		invokeEvent(Event.ON_PLAY, entityId, getBoardEntityId(), argument);
+		EventOnPlay.Argument argument = new EventOnPlay.Argument();
+		invokeEvent(entityId, argument, (mgr) -> mgr.onPlay());
 		return argument;
 	}
 	
-	private EventArgument invokeBeforeZoneChangeEvents(int entityId, PlayerId toSide, Zone toZone) {
-		EventArgument argument = new EventArgument();
-		argument.side = toSide;
-		argument.zone = toZone;
-		invokeEvent(Event.BEFORE_ZONE_CHANGE, getBoardEntityId(), getBoardEntityId(), argument);
-		invokeEvent(Event.BEFORE_ZONE_CHANGE, entityId, getBoardEntityId(), argument);
+	private EventBeforeZoneChange.Argument invokeBeforeZoneChangeEvents(int entityId, PlayerId toSide, Zone toZone) {
+		EventBeforeZoneChange.Argument argument = new EventBeforeZoneChange.Argument(toSide, toZone);
+		invokeFlowEvent(argument, (mgr) -> mgr.beforeZoneChange());
 		return argument;
 	}
 	
 	private void invokeRemovedFromZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
-		EventArgument argument = new EventArgument();
-		argument.side = fromSide;
-		argument.zone = fromZone;
-		invokeEvent(Event.REMOVED_FROM_ZONE, getBoardEntityId(), getBoardEntityId(), argument);
-		invokeEvent(Event.REMOVED_FROM_ZONE, entityId, getBoardEntityId(), argument);
+		EventRemovedFromZone.Argument argument = new EventRemovedFromZone.Argument(fromSide, fromZone);
+		invokeFlowEvent(argument, (mgr) -> mgr.removedFromZone());
+		invokeEvent(entityId, argument, (mgr) -> mgr.removedFromZone());
 	}
 	
 	private void invokeAddedToZoneEvents(int entityId, PlayerId fromSide, Zone fromZone) {
-		EventArgument argument = new EventArgument();
-		argument.side = fromSide;
-		argument.zone = fromZone;
-		invokeEvent(Event.ADDED_TO_ZONE, getBoardEntityId(), getBoardEntityId(), argument);
-		invokeEvent(Event.ADDED_TO_ZONE, entityId, getBoardEntityId(), argument);
+		EventAddedToZone.Argument argument = new EventAddedToZone.Argument(fromSide, fromZone);
+		invokeFlowEvent(argument, (mgr) -> mgr.addedToZone());
+		invokeEvent(entityId, argument, (mgr) -> mgr.addedToZone());
 	}
 	
 	public void invokeBeforeTurnEndEvents() {
-		EventArgument argument = new EventArgument();
-		invokeEvent(Event.BEFORE_TURN_END, getBoardEntityId(), getBoardEntityId(), argument);
+		EventBeforeTurnEnd.Argument argument = new EventBeforeTurnEnd.Argument();
+		invokeFlowEvent(argument, (mgr) -> mgr.beforeTurnEnd());
 	}
 	public void invokeAfterTurnStartedEvents() {
-		EventArgument argument = new EventArgument();
-		invokeEvent(Event.AFTER_TURN_STARTED, getBoardEntityId(), getBoardEntityId(), argument);
+		EventAfterTurnStarted.Argument argument = new EventAfterTurnStarted.Argument();
+		invokeFlowEvent(argument, (mgr) -> mgr.afterTurnStarted());
 	}
 	
 	public void changeZone(int entityId, PlayerId side, Zone zone) {
-		EventArgument argument = invokeBeforeZoneChangeEvents(getBoardEntityId(), side, zone);
+		EventBeforeZoneChange.Argument argument = invokeBeforeZoneChangeEvents(getBoardEntityId(), side, zone);
 		if (argument.abort) return;
 		
 		side = argument.side;
@@ -189,14 +214,6 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		changeZone(entityId, side, zone);
 	}
 	
-	public int addEvent(int entityId, Event event, EventHandler handler) {
-		return state.getEntityManager().get(entityId).getEventManager().add(event, handler);
-	}
-	
-	public void removeEvent(int entityId, Event event, int index, boolean fromOwner) {
-		state.getEntityManager().get(entityId).getEventManager().markRemoved(event, index, fromOwner);
-	}
-	
 	public void damage(int triggererId, int entityId, int val) {
 		Entity entity = state.getEntityManager().get(entityId);
 		
@@ -205,9 +222,8 @@ public class ManagedState implements DeepCopyable<ManagedState>, CopyableAsBase<
 		if (newHp < 0) newHp = 0;
 		entity.getMutableProperty().setHp(newHp);
 		
-		EventArgument argument = new EventArgument();
-		argument.amount = originHp - newHp;
-		invokeEvent(Event.ON_DAMAGED, entityId, triggererId, argument);
+		EventOnDamaged.Argument argument = new EventOnDamaged.Argument(originHp-newHp);
+		invokeEvent(entityId, argument, (mgr) -> mgr.onDamaged());
 	}
 	
 	public void spendCrystal(PlayerId side, int amount) {

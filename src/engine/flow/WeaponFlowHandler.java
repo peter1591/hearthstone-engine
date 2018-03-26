@@ -3,10 +3,9 @@ package engine.flow;
 import engine.ManagedState;
 import engine.board.Board.PlayerId;
 import engine.board.ReadablePlayer;
-import engine.event.Event;
-import engine.event.EventArgument;
+import engine.event.EventAfterAttacked;
+import engine.event.EventModifyProperty;
 import engine.event.LambdaEventHandler;
-import engine.event.LambdaEventHandler.Operation;
 
 /**
  * Implement the weapon as follows.
@@ -19,9 +18,8 @@ import engine.event.LambdaEventHandler.Operation;
  *
  */
 public class WeaponFlowHandler {
-	static final LambdaEventHandler addWeaponAttack = LambdaEventHandler.create(new Operation() {
-		@Override
-		public boolean handle(Event event, ManagedState state, EventArgument argument) {
+	static final LambdaEventHandler<EventModifyProperty.Argument> addWeaponAttack = LambdaEventHandler.create(
+			(ManagedState state, EventModifyProperty.Argument argument) -> {
 			PlayerId side = argument.owner.getFinalProperty().getSide();
 			if (state.getPlayer(side).hasWeapon()) {
 				int weaponId = state.getPlayer(side).getWeaponEntityId();
@@ -29,12 +27,10 @@ public class WeaponFlowHandler {
 				argument.owner.getMutableProperty().addAttack(attack);
 			}
 			return true;
-		}
-	});
+		});
 
-	static final LambdaEventHandler reduceWeaponDurability = LambdaEventHandler.create(new Operation() {
-		@Override
-		public boolean handle(Event event, ManagedState state, EventArgument argument) {
+	static final LambdaEventHandler<EventAfterAttacked.Argument> reduceWeaponDurability = LambdaEventHandler.create(
+			(ManagedState state, EventAfterAttacked.Argument argument) -> {
 			PlayerId side = argument.owner.getFinalProperty().getSide();
 			if (state.getPlayer(side).hasWeapon()) {
 				int weaponId = state.getPlayer(side).getWeaponEntityId();
@@ -42,8 +38,7 @@ public class WeaponFlowHandler {
 				state.damage(state.getBoardEntityId(), weaponId, damage);
 			}
 			return true;
-		}
-	});
+			});
 
 	public static void Process(ManagedState state) {
 		ProcessPlayer(state, state.getPlayer(PlayerId.FIRST));
@@ -51,7 +46,7 @@ public class WeaponFlowHandler {
 	}
 
 	static void ProcessPlayer(ManagedState state, ReadablePlayer player) {
-		state.addEvent(player.getHeroEntityId(), Event.PROPERTY_MODIFIERS, addWeaponAttack);
-		state.addEvent(player.getHeroEntityId(), Event.AFTER_ATTACKED, reduceWeaponDurability);
+		state.getEntityEventManager(player.getHeroEntityId()).modifyProperty().add(addWeaponAttack);
+		state.getEntityEventManager(player.getHeroEntityId()).afterAttacked().add(reduceWeaponDurability);
 	}
 }

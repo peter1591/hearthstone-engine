@@ -2,18 +2,18 @@ package engine.event;
 
 import engine.ManagedState;
 
-public final class LambdaEventHandler implements EventHandler {
+public final class LambdaEventHandler<T extends EventArgument> implements EventHandler<T> {
 	/**
 	 * Should be stateless.
 	 * 
 	 * @author petershih
 	 *
 	 */
-	public interface Operation {
-		boolean handle(Event event, ManagedState state, EventArgument argument);
+	public static interface Operation<T> {
+		boolean handle(ManagedState state, T argument);
 	}
 	
-	protected Operation operation;
+	protected Operation<T> operation;
 	
 	protected boolean owned = false;
 	
@@ -30,19 +30,19 @@ public final class LambdaEventHandler implements EventHandler {
 	protected LambdaEventHandler() {
 	}
 	
-	static public LambdaEventHandler create(Operation operation) {
-		LambdaEventHandler ret = new LambdaEventHandler();
+	static public <T extends EventArgument> LambdaEventHandler<T> create(Operation<T> operation) {
+		LambdaEventHandler<T> ret = new LambdaEventHandler<T>();
 		ret.operation = operation;
 		return ret;
 	}
 
 	@Override
-	public boolean invoke(Event event, ManagedState state, EventArgument argument) {
-		return operation.handle(event, state, argument);
+	public boolean invoke(ManagedState state, T argument) {
+		return operation.handle(state, argument);
 	}
 	
 	@Override
-	public LambdaEventHandler deepCopy() {
+	public LambdaEventHandler<T> deepCopy() {
 		return this; // this is a stateless object, so it's ok to share the instance
 	}
 }

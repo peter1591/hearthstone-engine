@@ -3,7 +3,7 @@ package engine.event;
 import engine.ManagedState;
 import engine.utils.DeepCopyable;
 
-public interface EventHandler extends DeepCopyable<EventHandler> {
+public interface EventHandler<T extends EventArgument> extends DeepCopyable<EventHandler<T>> {
 	/**
 	 * 
 	 * @param event
@@ -11,7 +11,7 @@ public interface EventHandler extends DeepCopyable<EventHandler> {
 	 * @param argument
 	 * @return return true to keep this event handler; false to remove this.
 	 */
-	boolean invoke(Event event, ManagedState state, EventArgument argument);
+	boolean invoke(ManagedState state, T argument);
 	
 	/**
 	 * Indicates if this event handler is owned by another manager (typically an aura effect).

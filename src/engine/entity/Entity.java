@@ -1,6 +1,6 @@
 package engine.entity;
 
-import engine.event.EventManager;
+import engine.event.EntityEventManager;
 import engine.utils.CopyableAsBase;
 import engine.utils.DeepCopyable;
 import engine.utils.LayeredContainers;
@@ -11,7 +11,7 @@ public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 	LayeredContainers<ModifierLayer, Modifiers> modifiers;
 	Property finalProperty;
 	
-	EventManager eventManager;
+	EntityEventManager eventManager;
 	
 	private Entity() {
 	}
@@ -21,7 +21,7 @@ public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 		ret.initialProperty = Property.create();
 		ret.modifiers = LayeredContainers.create(ModifierLayer.class);
 		ret.finalProperty = Property.create();
-		ret.eventManager = EventManager.create();
+		ret.eventManager = EntityEventManager.create();
 		
 		ret.recalculateProperty();
 		return ret;
@@ -47,7 +47,7 @@ public class Entity implements DeepCopyable<Entity>, CopyableAsBase<Entity> {
 		return ret;
 	}
 	
-	public EventManager getEventManager() {
+	public EntityEventManager getEventManager() {
 		return eventManager;
 	}
 	
