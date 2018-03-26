@@ -4,7 +4,6 @@ import java.util.Set;
 
 import engine.ManagedState;
 import engine.event.EntityEventManager;
-import engine.event.EventHandler;
 import engine.utils.DeepCopyable;
 
 /**
@@ -22,7 +21,7 @@ import engine.utils.DeepCopyable;
  * @author petershih
  *
  */
-public interface AuraSpec<T extends EventHandler<?>> extends DeepCopyable<AuraSpec<T>> {
+public interface AuraSpec extends DeepCopyable<AuraSpec> {
 	boolean exists(int auraEmitter, ManagedState state);
 	
 	default boolean enabled(int auraEmitter, ManagedState state) {
@@ -34,10 +33,8 @@ public interface AuraSpec<T extends EventHandler<?>> extends DeepCopyable<AuraSp
 	int addEvent(EntityEventManager eventManager, int targetEntity);
 	void removeEvent(EntityEventManager eventManager, int targetEntity, int index);
 
-	T createEffectHandler();
-
 	@Override
-	default AuraSpec<T> deepCopy() {
+	default AuraSpec deepCopy() {
 		return this; // this should be a stateless object, so it's safe to share instance
 	}
 }

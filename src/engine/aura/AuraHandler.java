@@ -31,7 +31,7 @@ public final class AuraHandler<T extends EventArgument> implements EventHandler<
 	boolean owned = false;
 	int auraEmitter;
 	HashMap<Integer, Integer> appliedEffects;
-	AuraSpec<EventHandler<T>> spec;
+	AuraSpec spec;
 
 	private AuraHandler() {
 
@@ -62,7 +62,7 @@ public final class AuraHandler<T extends EventArgument> implements EventHandler<
 		}
 	}
 
-	static public <T extends EventArgument> AuraHandler<T> create(int auraEmitter, AuraSpec<EventHandler<T>> spec) {
+	static public <T extends EventArgument> AuraHandler<T> create(int auraEmitter, AuraSpec spec) {
 		AuraHandler<T> ret = new AuraHandler<>();
 		ret.auraEmitter = auraEmitter;
 		ret.appliedEffects = new HashMap<>();

@@ -3,11 +3,10 @@ package engine.aura;
 import engine.ManagedState;
 import engine.entity.Modifier;
 import engine.event.EntityEventManager;
-import engine.event.EventHandler;
 import engine.event.EventModifyProperty;
 import engine.event.LambdaEventHandler;
 
-public interface ToModifyProperty extends AuraSpec<EventHandler<EventModifyProperty.Argument>> {
+public interface ToModifyProperty extends AuraSpec {
 	Modifier getPropertyModifier();
 
 	@Override
@@ -17,5 +16,10 @@ public interface ToModifyProperty extends AuraSpec<EventHandler<EventModifyPrope
 					getPropertyModifier().apply(argument.owner.getMutableProperty());
 					return false;
 				}));
+	}
+	
+	@Override
+	default void removeEvent(EntityEventManager eventManager, int targetEntity, int index) {
+		eventManager.modifyProperty().markRemoved(index, true);
 	}
 }

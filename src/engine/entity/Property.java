@@ -1,7 +1,6 @@
 package engine.entity;
 
 import engine.board.Board.PlayerId;
-import engine.entity.ReadableProperty.CardType;
 import engine.utils.CopyAsBaseByDeepCopy;
 import engine.utils.DeepCopyable;
 
